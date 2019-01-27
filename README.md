@@ -1,12 +1,9 @@
-# data_loading.py-
+# Data_loading.py-
 
-data_loading.py user pandas and numpy library to load data to postgresql database . 
-Scrip  uses postgresql as underlying database 
+data_loading.py user pandas and numpy library to load data to postgresql database .
 
-
-
-
-Below are the steps to execute this script to successfully load data to fact table and dimension tables .
+## Script  uses postgresql as underlying database 
+## Below are the steps to execute this script to successfully load data to fact table and dimension tables .
 
 1) Setup  postgresql database on local machine( using  brew install postgresql ) 
 2) Once,Postgresql is installed initialize postgresql cluster using  initdb 
@@ -16,9 +13,11 @@ pg_ctl -D /usr/local/var/postgres start && brew services start postgresql
 
 4) Verify postgresql is up and running using below command.
 
-Test ouptut 
------------
+## Test ouptut 
+
+```
 rupehs-iMac:~ postgres$ ps -ef | grep postgres | grep -aiv idle 
+
   502  3147     1   0 11:18PM ??         0:00.29 /Library/PostgreSQL/10/bin/postgres -D /Library/PostgreSQL/10/data
   502  3148  3147   0 11:18PM ??         0:00.02 postgres: logger process     
   502  3150  3147   0 11:18PM ??         0:00.43 postgres: checkpointer process     
@@ -30,20 +29,24 @@ rupehs-iMac:~ postgres$ ps -ef | grep postgres | grep -aiv idle
     0  5028  4970   0  5:46AM ttys001    0:00.02 sudo su - postgres
     0  5030  5028   0  5:47AM ttys001    0:00.01 su - postgres
   502  5037  5031   0  5:47AM ttys001    0:00.00 grep postgres
+```
 
-5) Install postgresql python module psycopg2 using below command 
+## Install postgresql python module psycopg2 using below command 
+```
 pip install psycopg2
+```
 
-5) Make sure pandas and numpy python libraries are installed.
-6) Execute data_loading.py script . 
+## Make sure pandas and numpy python libraries are installed.
+
+## Execute data_loading.py script . 
 
 
 
 
 
-Sample output from data loaded to tables  post successfull loading of data  inside db . 
---------------------------------------------------------------------------------------
+## Sample output from data loaded to tables  post successfull loading of data  inside db . 
 
+```
 postgres=# \d fact_flat
                          Table "public.fact_flat"
       Column      |         Type          | Collation | Nullable | Default 
@@ -76,10 +79,6 @@ Referenced by:
     TABLE "dim_address" CONSTRAINT "dim_address_id_fkey" FOREIGN KEY (id) REFERENCES fact_flat(id)
     TABLE "dim_agency" CONSTRAINT "dim_agency_id_fkey" FOREIGN KEY (id) REFERENCES fact_flat(id)
 
-
-
-
-
 postgres=# \d dim_address 
                     Table "public.dim_address"
    Column    |       Type        | Collation | Nullable | Default 
@@ -107,14 +106,12 @@ postgres=# \d dim_agency
 Foreign-key constraints:
     "dim_agency_id_fkey" FOREIGN KEY (id) REFERENCES fact_flat(id)
 
+```
 
 
-Sample data :- 
------------
 
-Data from fact_table :- 
-----------------------
-
+## Data from fact_table
+```
 postgres=# select id,apartmenttype,housenumber,livingspace,floors,bedrooms,rooms,bathrooms,balcony,totalrent,heatingcosts,servicecharge from fact_flat limit 10;
     id    |    apartmenttype    | housenumber | livingspace | floors | bedrooms | rooms | bathrooms | balcony | totalrent | heatingcosts | servicecharge 
 ----------+---------------------+-------------+-------------+--------+----------+-------+-----------+---------+-----------+--------------+---------------
@@ -129,11 +126,11 @@ postgres=# select id,apartmenttype,housenumber,livingspace,floors,bedrooms,rooms
  55156889 | APARTMENT           | 11          |       54.62 |      3 |        1 |     2 |         1 | t       |     876.1 |           70 |        111.42
  49084203 | NO_INFORMATION      | 52          |       76.02 |      3 |        3 |     3 |         1 | t       |      1060 |           70 |           121
 (10 rows)
+```
 
+## Data from agency table :- 
 
-Data from agency table :- 
-------------------------
-
+```
 postgres=# select * from public.dim_agency limit 10;
     id    |  firstname   |   lastname   |   phonenumber   |               email                |      city       | postcode 
 ----------+--------------+--------------+-----------------+------------------------------------+-----------------+----------
@@ -147,10 +144,10 @@ postgres=# select * from public.dim_agency limit 10;
  51076414 | Bernd        | Trieloff     | 0421 20805881   | karentrieloff38@gmail.com          | Berlin          | 13089.0
  55156889 | Scholz       | Scholz       | 030 31580243    | vermietung@samuelbraun.com         | Berlin          | 12347.0
  49084203 | Alexander    | Lohmüller   | 030 8513081     | alexander-lohmueller@onlinehome.de | Berlin          | 12051.0
+```
+## Data from address table :- 
 
-Data from address table :- 
--------------------------
-
+```
 postgres=# select * from public.dim_address  limit 10;
     id    |  city  | housenumber | postcode |        street         
 ----------+--------+-------------+----------+-----------------------
@@ -165,7 +162,7 @@ postgres=# select * from public.dim_address  limit 10;
  38411546 | Berlin | 52          | 14197    | Binger Straße
  41376170 | Berlin | 16          | 12557    | Möllhausenufer
 (10 rows)
-
+```
 
 
 
